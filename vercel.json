@@ -1,0 +1,36 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "services": {
+    "backend": {
+      "root": ".",
+      "runtime": "container",
+      "entrypoint": "docker/prod/Dockerfile"
+    },
+    "hocuspocus": {
+      "root": "extensions/op-blocknote-hocuspocus",
+      "framework": "other",
+      "bindings": [
+        {
+          "type": "service",
+          "service": "backend",
+          "format": "url",
+          "env": "OPENPROJECT_URL"
+        }
+      ]
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/collaboration/(.*)",
+      "destination": {
+        "service": "hocuspocus"
+      }
+    },
+    {
+      "source": "/(.*)",
+      "destination": {
+        "service": "backend"
+      }
+    }
+  ]
+}
